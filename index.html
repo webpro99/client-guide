@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Tarik Belasri — Your Private Tour Guide in Morocco</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root{
+      --ink:#100e0b;--ink2:#1c1914;--ink3:#26211a;
+      --sand:#faf7f2;--card:#ffffff;
+      --gold:#b8842a;--gold2:#d4a247;--gold3:#f0c870;
+      --gd:rgba(184,132,42,.15);--gb:rgba(184,132,42,.3);
+      --terra:#a8482a;--sage:#3d6b50;
+      --text:#1a1612;--muted:#6b6357;--bdr:#ede8e0;
+      --sh:0 4px 28px rgba(16,14,11,.08);
+      --shlg:0 24px 80px rgba(16,14,11,.18);
+      --r:20px;--rsm:12px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    img{display:block;max-width:100%}
+    a{text-decoration:none;color:inherit}
+
+    /* NAV */
+    .nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(16,14,11,.92);backdrop-filter:blur(18px) saturate(160%);border-bottom:1px solid rgba(184,132,42,.18);transition:background .3s}
+    .nav-inner{max-width:1260px;margin:0 auto;padding:0 32px;height:68px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .nav-brand{display:flex;align-items:center;gap:12px;flex-shrink:0}
+    .nav-avatar{width:42px;height:42px;border-radius:50%;overflow:hidden;border:2px solid var(--gold);flex-shrink:0}
+    .nav-avatar img{width:100%;height:100%;object-fit:cover;object-position:top center}
+    .nav-name{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:#fff;letter-spacing:.02em;line-height:1.2}
+    .nav-role{font-size:.7rem;color:var(--gold);letter-spacing:.14em;text-transform:uppercase}
+    .nav-links{display:flex;align-items:center;gap:2px}
+    .nav-links a{padding:8px 14px;border-radius:8px;font-size:.88rem;font-weight:500;color:rgba(255,255,255,.6);transition:.18s}
+    .nav-links a:hover{color:#fff;background:rgba(255,255,255,.07)}
+    .nav-links a.active{color:var(--gold)}
+    .nav-cta{background:var(--gold)!important;color:var(--ink)!important;font-weight:700!important;border-radius:9px!important;padding:10px 20px!important;box-shadow:0 4px 16px rgba(184,132,42,.35)!important}
+    .nav-cta:hover{background:var(--gold2)!important}
+
+    /* HERO */
+    .hero{min-height:100vh;padding-top:68px;display:grid;position:relative;overflow:hidden;background:linear-gradient(160deg,var(--ink2) 0%,var(--ink3) 60%,#1e1510 100%)}
+    .hero-pat{position:absolute;inset:0;background:radial-gradient(circle at 20% 50%,rgba(184,132,42,.08),transparent 50%),radial-gradient(circle at 80% 20%,rgba(168,72,42,.06),transparent 40%);pointer-events:none}
+    .hero-inner{max-width:1260px;margin:0 auto;padding:80px 32px 60px;display:grid;grid-template-columns:1fr;gap:48px;align-items:center;position:relative;z-index:2}
+    .hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:.75rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:22px}
+    .hero-eyebrow::before,.hero-eyebrow::after{content:'';width:22px;height:1px;background:var(--gold);opacity:.6}
+    .hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,7vw,5.2rem);font-weight:700;line-height:1.06;color:#fff;letter-spacing:-.02em;margin-bottom:18px}
+    .hero h1 em{font-style:italic;color:var(--gold2)}
+    .hero-sub{font-size:1.05rem;color:rgba(255,255,255,.65);line-height:1.84;max-width:500px;margin-bottom:36px;font-weight:300}
+    .hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+    .hero-img{position:relative;max-width:480px;margin:0 auto;width:100%}
+    .hero-frame{border-radius:28px;overflow:hidden;box-shadow:0 32px 100px rgba(0,0,0,.5);aspect-ratio:4/5}
+    .hero-frame img{width:100%;height:100%;object-fit:cover;object-position:top center}
+    .hero-stat{position:absolute;bottom:24px;left:-18px;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-radius:16px;padding:16px 20px;box-shadow:0 16px 48px rgba(0,0,0,.22)}
+    .hero-stat .num{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:700;color:var(--gold);line-height:1}
+    .hero-stat .txt{font-size:.76rem;color:var(--muted);font-weight:500;line-height:1.4;margin-top:2px}
+
+    /* BUTTONS */
+    .btn{display:inline-flex;align-items:center;gap:9px;border:0;cursor:pointer;border-radius:var(--rsm);padding:14px 26px;font-family:'DM Sans',sans-serif;font-size:.93rem;font-weight:600;transition:.2s ease;min-height:48px}
+    .btn:active{transform:scale(.98)}
+    .btn-gold{background:var(--gold);color:var(--ink);box-shadow:0 6px 24px rgba(184,132,42,.38)}
+    .btn-gold:hover{background:var(--gold2)}
+    .btn-outline{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.35)}
+    .btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+    .btn-ghost{background:var(--card);color:var(--text);border:1.5px solid var(--bdr)}
+    .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+    .btn-dark{background:var(--ink2);color:#fff}
+    .btn-dark:hover{background:var(--ink3)}
+
+    /* LAYOUT */
+    .wrap{max-width:1260px;margin:0 auto;padding:0 32px}
+    .section{padding:96px 0}
+    .eyebrow{display:flex;align-items:center;gap:10px;font-size:.73rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:14px}
+    .eyebrow::after{content:'';flex:0 0 26px;height:1px;background:var(--gold);opacity:.6}
+    .sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,3.5vw,3rem);font-weight:700;line-height:1.1;letter-spacing:-.02em;margin-bottom:10px}
+    .sec-desc{color:var(--muted);line-height:1.84;font-size:.97rem;max-width:54ch;font-weight:300}
+
+    /* ABOUT */
+    .about{background:var(--card)}
+    .about-inner{max-width:1260px;margin:0 auto;padding:96px 32px;display:grid;grid-template-columns:1fr;gap:64px;align-items:center}
+    .about-img-wrap{position:relative;max-width:440px;margin:0 auto;width:100%}
+    .about-frame{border-radius:24px;overflow:hidden;box-shadow:var(--shlg);aspect-ratio:3/4}
+    .about-frame img{width:100%;height:100%;object-fit:cover;object-position:top center}
+    .about-deco{position:absolute;top:-14px;right:-14px;width:80px;height:80px;border-radius:18px;background:var(--gold);display:grid;place-items:center;box-shadow:0 12px 36px rgba(184,132,42,.4)}
+    .about-deco i{font-size:1.9rem;color:var(--ink)}
+    .about-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:700;line-height:1.1;letter-spacing:-.02em;margin-bottom:20px}
+    .about-title em{font-style:italic;color:var(--gold)}
+    .about-body p{color:var(--muted);line-height:1.9;font-size:.97rem;font-weight:300;margin-bottom:16px}
+    .about-stats{display:flex;gap:32px;flex-wrap:wrap;margin:28px 0 32px}
+    .about-stat .n{font-family:'Cormorant Garamond',serif;font-size:2.7rem;font-weight:700;color:var(--gold);line-height:1}
+    .about-stat .l{font-size:.76rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-top:4px}
+
+    /* SERVICES */
+    .services{background:var(--sand)}
+    .svc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:22px}
+    .svc-card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:30px;box-shadow:var(--sh);transition:.22s ease;display:flex;flex-direction:column;gap:14px}
+    .svc-card:hover{transform:translateY(-5px);box-shadow:var(--shlg);border-color:var(--gb)}
+    .svc-icon{width:54px;height:54px;border-radius:14px;background:var(--gd);border:1px solid var(--gb);display:grid;place-items:center}
+    .svc-icon i{font-size:1.3rem;color:var(--gold)}
+    .svc-card h3{font-family:'Cormorant Garamond',serif;font-size:1.32rem;font-weight:700}
+    .svc-card p{color:var(--muted);line-height:1.8;font-size:.91rem;font-weight:300;flex:1}
+
+    /* COMMUNITY */
+    .community{background:linear-gradient(135deg,var(--ink2),var(--ink3));border-top:1px solid var(--gb);border-bottom:1px solid var(--gb)}
+    .community-inner{max-width:1260px;margin:0 auto;padding:96px 32px;display:grid;grid-template-columns:1fr;gap:52px;align-items:center}
+    .community .eyebrow{color:var(--gold2)}
+    .community .eyebrow::after{background:var(--gold2)}
+    .comm-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:700;line-height:1.1;color:#fff;letter-spacing:-.02em;margin-bottom:16px}
+    .comm-title em{font-style:italic;color:var(--gold2)}
+    .comm-desc{color:rgba(255,255,255,.52);line-height:1.88;font-size:.97rem;font-weight:300;max-width:52ch}
+    .comm-img{border-radius:24px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.5);aspect-ratio:4/3;max-width:520px;margin:0 auto;width:100%}
+    .comm-img img{width:100%;height:100%;object-fit:cover}
+
+    /* SUITED FOR */
+    .suited{background:var(--sand)}
+    .suited-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:40px}
+    .suited-card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:28px;box-shadow:var(--sh)}
+    .suited-card .ico{font-size:1.6rem;margin-bottom:14px;color:var(--gold)}
+    .suited-card h3{font-family:'Cormorant Garamond',serif;font-size:1.18rem;font-weight:700;margin-bottom:8px}
+    .suited-card p{font-size:.9rem;color:var(--muted);line-height:1.8;font-weight:300}
+    .suited-note{margin-top:22px;padding:20px 26px;background:var(--gd);border:1px solid var(--gb);border-radius:var(--rsm);display:flex;gap:14px;align-items:flex-start}
+    .suited-note i{font-size:1.25rem;color:var(--gold);flex-shrink:0;margin-top:2px}
+    .suited-note p{font-size:.92rem;line-height:1.8;color:var(--text);font-weight:400}
+    .suited-note p strong{color:var(--gold)}
+
+    /* GUIDE DOWNLOAD */
+    .guide-dl{background:linear-gradient(170deg,var(--ink),var(--ink3));border-top:1px solid var(--gb);border-bottom:1px solid var(--gb)}
+    .guide-inner{max-width:1260px;margin:0 auto;padding:80px 32px;display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap}
+    .guide-badge{background:var(--gold);color:var(--ink);border-radius:var(--rsm);padding:8px 18px;font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;display:inline-block;margin-bottom:14px}
+    .guide-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.7rem);font-weight:700;color:#fff;line-height:1.1;margin-bottom:12px}
+    .guide-desc{color:rgba(255,255,255,.52);line-height:1.84;font-size:.95rem;max-width:46ch;font-weight:300}
+    .guide-box{background:rgba(255,255,255,.06);border:1px solid var(--gb);border-radius:var(--r);padding:32px;flex-shrink:0;max-width:340px;width:100%}
+    .guide-box-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:#fff;text-align:center;margin-bottom:6px}
+    .guide-box-sub{font-size:.83rem;color:rgba(255,255,255,.42);text-align:center;margin-bottom:20px;line-height:1.7}
+    .guide-item{display:flex;align-items:center;gap:10px;font-size:.87rem;color:rgba(255,255,255,.52);margin-bottom:9px}
+    .guide-item i{color:var(--gold);width:14px}
+
+    /* MINI CTA */
+    .mini-cta{background:var(--ink2);text-align:center;padding:72px 32px;border-top:1px solid var(--gb);border-bottom:1px solid var(--gb)}
+    .mini-cta h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;color:#fff;margin-bottom:10px}
+    .mini-cta p{color:rgba(255,255,255,.48);font-size:.97rem;margin-bottom:28px;font-weight:300}
+
+    /* FOOTER */
+    .footer{background:var(--ink);border-top:1px solid var(--gb);padding:64px 0 0}
+    .footer-grid{display:grid;grid-template-columns:1fr;gap:36px;padding-bottom:48px}
+    .f-name{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:700;color:#fff;margin-bottom:10px}
+    .f-desc{font-size:.87rem;color:rgba(255,255,255,.38);line-height:1.9;max-width:28ch}
+    .f-socials{display:flex;gap:14px;margin-top:18px}
+    .f-socials a{color:rgba(255,255,255,.35);font-size:1.1rem;transition:.18s}
+    .f-socials a:hover{color:var(--gold)}
+    .f-col h4{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:14px}
+    .f-col a{display:block;font-size:.87rem;color:rgba(255,255,255,.38);line-height:2.1;transition:.18s}
+    .f-col a:hover{color:var(--gold)}
+    .f-bottom{border-top:1px solid rgba(255,255,255,.06);padding:20px 0;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-size:.8rem;color:rgba(255,255,255,.22)}
+    .f-bottom a{color:rgba(255,255,255,.22);transition:.18s}
+    .f-bottom a:hover{color:var(--gold)}
+
+    /* MODAL */
+    .modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(16,14,11,.8);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}
+    .modal-overlay.open{display:flex}
+    .modal{background:var(--card);border-radius:22px;width:min(820px,100%);max-height:92vh;display:grid;grid-template-columns:1fr;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.46);animation:sUp .3s ease}
+    @keyframes sUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+    .m-img{display:none}.m-img img{width:100%;height:100%;object-fit:cover;object-position:top center}
+    .m-body{overflow-y:auto;max-height:92vh;padding:30px}
+    .m-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:22px}
+    .m-head h2{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700}
+    .m-close{width:40px;height:40px;border:0;border-radius:10px;background:var(--sand);cursor:pointer;font-size:1.1rem;color:var(--muted);transition:.18s;flex-shrink:0}
+    .m-close:hover{background:var(--bdr)}
+    .fg{display:grid;grid-template-columns:1fr;gap:14px}
+    .fl{grid-column:1/-1}
+    .f{display:flex;flex-direction:column;gap:6px}
+    .f label{font-size:.8rem;font-weight:700;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+    .f label i{color:var(--gold)}
+    input,textarea,select{width:100%;border:1.5px solid var(--bdr);border-radius:var(--rsm);padding:11px 13px;font:400 .93rem 'DM Sans',sans-serif;background:var(--sand);color:var(--text);outline:none;transition:.18s}
+    input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(184,132,42,.12)}
+    textarea{resize:vertical;min-height:80px}
+    .p-sum{background:var(--ink2);border-radius:var(--rsm);padding:16px;color:#fff}
+    .p-row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;font-size:.88rem;border-bottom:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.52)}
+    .p-row:last-child{border-bottom:0}
+    .p-row.tot{color:var(--gold);font-weight:700;font-size:.97rem}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink2);color:#fff;border:1px solid var(--gb);border-radius:var(--rsm);padding:14px 22px;font-size:.9rem;font-weight:500;z-index:999;opacity:0;transition:.3s ease;white-space:nowrap;box-shadow:var(--shlg);display:flex;align-items:center;gap:8px}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .toast.success{background:#0a2218;border-color:#16a34a;color:#86efac}
+    .toast.error{background:#2d0909;border-color:#991b1b;color:#fca5a5}
+
+    /* MOBILE */
+    .bnav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;grid-template-columns:repeat(4,1fr);background:rgba(16,14,11,.98);backdrop-filter:blur(16px);border-top:1px solid var(--gb);padding:10px 10px calc(10px + env(safe-area-inset-bottom));gap:6px}
+    .bnav-b{border:0;background:rgba(255,255,255,.06);color:rgba(255,255,255,.48);border-radius:10px;min-height:48px;cursor:pointer;font:600 .72rem 'DM Sans',sans-serif;transition:.18s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+    .bnav-b.active{background:var(--gold);color:var(--ink)}
+    .bnav-b i{font-size:.98rem}
+
+    @media(min-width:768px){
+      .hero-inner,.about-inner,.community-inner{grid-template-columns:1fr 1fr;gap:60px}
+      .footer-grid{grid-template-columns:2fr 1fr 1fr 1fr}
+      .fg{grid-template-columns:repeat(2,1fr)}
+      .modal{grid-template-columns:1fr 1fr}
+      .m-img{display:block}
+    }
+    @media(max-width:767px){
+      .nav-inner,.wrap{padding-left:18px;padding-right:18px}
+      .nav-links{display:none}
+      .bnav{display:grid}
+      body{padding-bottom:72px}
+      .hero-inner{padding-top:32px;padding-bottom:40px}
+      .hero-stat{left:0;bottom:16px}
+      .hero-img{order:-1}
+      .section,.about-inner,.community-inner,.guide-inner{padding-top:64px;padding-bottom:64px}
+      .mini-cta{padding:56px 18px}
+      .guide-inner{flex-direction:column}
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav" id="mainNav">
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <div class="nav-avatar">
+        <img src="https://tarikbelasri.com/wp-content/uploads/Tarik-Belasri-Home-Photo.jpg" alt="Tarik"/>
+      </div>
+      <div>
+        <div class="nav-name">Tarik Belasri</div>
+        <div class="nav-role">Morocco Tour Guide</div>
+      </div>
+    </div>
+    <nav class="nav-links">
+      <a href="#" class="active">Home</a>
+      <a href="#about">About</a>
+      <a href="#testimonials">Testimonials</a>
+      <a href="#services" class="nav-cta"><i class="fa-solid fa-compass"></i> See Services</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-pat"></div>
+  <div class="hero-inner wrap">
+    <div>
+      <div class="hero-eyebrow">Morocco · Private Tour Guide</div>
+      <h1>Your Guide<br/>In <em>Morocco</em></h1>
+      <p class="hero-sub">A warm welcome to Morocco! I'll craft the most enjoyable travel experience for you as I'll be your private tour guide in Morocco. Let's chat about your dream trip!</p>
+      <div class="hero-actions">
+        <a href="#services" class="btn btn-gold"><i class="fa-solid fa-compass"></i> See Services</a>
+        <a href="#about" class="btn btn-outline"><i class="fa-solid fa-user"></i> Meet Tarik</a>
+      </div>
+    </div>
+    <div class="hero-img">
+      <div class="hero-frame">
+        <img src="https://tarikbelasri.com/wp-content/uploads/Tarik-Belasri-Home-Photo.jpg" alt="Tarik Belasri — Tour Guide in Morocco"/>
+      </div>
+      <div class="hero-stat">
+        <div class="num">436</div>
+        <div class="txt">Successful Tours<br/>In Morocco</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT / HI -->
+<section class="about" id="about">
+  <div class="about-inner">
+    <div class="about-img-wrap">
+      <div class="about-frame">
+        <img src="https://tarikbelasri.com/wp-content/uploads/Tarik-Belasri-4-Optimized.webp" alt="Tarik Belasri"/>
+      </div>
+      <div class="about-deco"><i class="fa-solid fa-star"></i></div>
+    </div>
+    <div>
+      <div class="eyebrow"><i class="fa-solid fa-user"></i> Your Guide</div>
+      <h2 class="about-title">Hi! I am <em>Tarik.</em></h2>
+      <div class="about-body">
+        <p>I'm here to make sure you experience Morocco like a true local.</p>
+        <p>I've spent years exploring every corner of this beautiful country, and I can't wait to share its hidden gems and vibrant culture with you. Let's make your Moroccan adventure unforgettable!</p>
+      </div>
+      <div class="about-stats">
+        <div class="about-stat">
+          <div class="n">436</div>
+          <div class="l">Successful Tours</div>
+        </div>
+        <div class="about-stat">
+          <div class="n">5★</div>
+          <div class="l">Average Rating</div>
+        </div>
+        <div class="about-stat">
+          <div class="n">100%</div>
+          <div class="l">Private & Personal</div>
+        </div>
+      </div>
+      <a href="#services" class="btn btn-gold"><i class="fa-solid fa-compass"></i> See Services</a>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section services" id="services">
+  <div class="wrap">
+    <div style="margin-bottom:44px">
+      <div class="eyebrow"><i class="fa-solid fa-wand-magic-sparkles"></i> What Can I Do For You</div>
+      <h2 class="sec-title">Experience Morocco<br/>Like Never Before</h2>
+      <p class="sec-desc">Every tour is crafted around you — your interests, your pace, your dream Moroccan adventure.</p>
+    </div>
+    <div class="svc-grid">
+      <div class="svc-card">
+        <div class="svc-icon"><i class="fa-solid fa-route"></i></div>
+        <h3>Personalized Tour</h3>
+        <p>I'll craft a unique itinerary just for you, based on your interests and pace. No generic tours — every experience is designed around what truly matters to you.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon"><i class="fa-solid fa-key"></i></div>
+        <h3>Local Secrets</h3>
+        <p>I'll take you off the beaten path to discover hidden gems that most tourists never see. Real Morocco, real stories, authentic connections with local people.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon"><i class="fa-solid fa-bag-shopping"></i></div>
+        <h3>Shopping Guidance</h3>
+        <p>I'll help you get quality products and authentic Moroccan souvenirs at fair prices. No tourist traps — just honest, genuine local shopping with confidence.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon"><i class="fa-solid fa-camera"></i></div>
+        <h3>Photography Spots</h3>
+        <p>I'll show you the most picturesque spots to capture unforgettable memories — perfect light, perfect angles, and the moments that make Morocco photos extraordinary.</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:48px">
+      <a href="pages/services.html" class="btn btn-gold"><i class="fa-solid fa-arrow-right"></i> Browse All Tours</a>
+    </div>
+  </div>
+</section>
+
+<!-- COMMUNITY -->
+<section class="community" id="community">
+  <div class="community-inner">
+    <div>
+      <div class="eyebrow"><i class="fa-solid fa-users"></i> Join the Community</div>
+      <h2 class="comm-title">Become part of our<br/><em>like-minded travelers</em><br/>community</h2>
+      <p class="comm-desc">Love exploring new places and sharing your travel stories? Join our community of like-minded adventurers! Connect with fellow travelers, exchange tips, and get exclusive updates on the best ways to experience Morocco and beyond.</p>
+      <div style="margin-top:36px;display:flex;gap:14px;flex-wrap:wrap">
+        <a href="#" class="btn btn-gold"><i class="fa-solid fa-user-plus"></i> Join the Community</a>
+        <a href="#" class="btn btn-outline"><i class="fa-brands fa-whatsapp"></i> WhatsApp Tarik</a>
+      </div>
+    </div>
+    <div class="comm-img">
+      <img src="https://tarikbelasri.com/wp-content/uploads/Tarik-Belasri-4-Optimized.webp" alt="Morocco Experience with Tarik"/>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IS THIS FOR -->
+<section class="section suited" id="testimonials">
+  <div class="wrap">
+    <div style="margin-bottom:8px">
+      <div class="eyebrow"><i class="fa-solid fa-circle-question"></i> Who Is This Best Suited For?</div>
+      <h2 class="sec-title">Is This Right<br/>For You?</h2>
+    </div>
+    <div class="suited-grid">
+      <div class="suited-card">
+        <div class="ico"><i class="fa-solid fa-binoculars"></i></div>
+        <h3>Curious Travelers</h3>
+        <p>Those who love to dive deep into the culture, history, and everyday life of locals. Real connections, authentic stories, and moments that stay with you forever.</p>
+      </div>
+      <div class="suited-card">
+        <div class="ico"><i class="fa-solid fa-person-hiking"></i></div>
+        <h3>Adventure Seekers</h3>
+        <p>Those eager to trek the Atlas Mountains, explore the Sahara Desert, or wander through vibrant souks. Morocco's greatest adventures are waiting for you.</p>
+      </div>
+      <div class="suited-card">
+        <div class="ico"><i class="fa-solid fa-camera-retro"></i></div>
+        <h3>Photography Lovers</h3>
+        <p>Travelers who want to capture Morocco's breathtaking landscapes and vibrant colors through a local's lens — at the right place, at the right light, at the right moment.</p>
+      </div>
+    </div>
+    <div class="suited-note">
+      <i class="fa-solid fa-circle-info"></i>
+      <p><strong>Important:</strong> Whether you're a solo traveler, a couple, or a group, I'll make sure your experience is unforgettable. Every tour is tailored entirely to your needs and expectations.</p>
+    </div>
+    <div style="text-align:center;margin-top:40px">
+      <a href="#services" class="btn btn-gold"><i class="fa-solid fa-compass"></i> See Services</a>
+    </div>
+  </div>
+</section>
+
+<!-- FREE GUIDE -->
+<section class="guide-dl" id="guide">
+  <div class="guide-inner">
+    <div>
+      <span class="guide-badge"><i class="fa-solid fa-gift"></i>&nbsp; Free Download</span>
+      <div class="eyebrow" style="color:var(--gold2)"><i class="fa-solid fa-map"></i> Free Morocco Guide</div>
+      <h2 class="guide-title">Download Your FREE Guide<br/>to Visiting Morocco</h2>
+      <p class="guide-desc">Ready to make the most of your Moroccan adventure? Grab your FREE guide packed with insider tips, must-see destinations, and everything you need to know before you come.</p>
+      <div style="margin-top:32px;display:flex;gap:14px;flex-wrap:wrap">
+        <a href="#" class="btn btn-gold"><i class="fa-solid fa-download"></i> Download Now</a>
+        <a href="#services" class="btn btn-outline"><i class="fa-solid fa-compass"></i> See Services</a>
+      </div>
+    </div>
+    <div class="guide-box">
+      <div style="font-size:2.6rem;text-align:center;margin-bottom:14px"><i class="fa-solid fa-book-open-reader" style="color:var(--gold)"></i></div>
+      <div class="guide-box-title">Morocco Travel Guide</div>
+      <div class="guide-box-sub">Insider tips · Must-see places · Best times to visit · Cultural etiquette</div>
+      <div class="guide-item"><i class="fa-solid fa-check"></i> Top 20 hidden gems</div>
+      <div class="guide-item"><i class="fa-solid fa-check"></i> Complete packing list</div>
+      <div class="guide-item"><i class="fa-solid fa-check"></i> Budget & money tips</div>
+      <div class="guide-item"><i class="fa-solid fa-check"></i> Best food & restaurants</div>
+      <div class="guide-item"><i class="fa-solid fa-check"></i> Cultural do's & don'ts</div>
+      <a href="#" class="btn btn-gold" style="width:100%;justify-content:center;margin-top:20px"><i class="fa-solid fa-download"></i> Download Now — Free</a>
+    </div>
+  </div>
+</section>
+
+<!-- MINI CTA -->
+<div class="mini-cta">
+  <div style="font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:10px">
+    <span style="width:22px;height:1px;background:var(--gold);display:inline-block;opacity:.6"></span>
+    Start Your Journey
+    <span style="width:22px;height:1px;background:var(--gold);display:inline-block;opacity:.6"></span>
+  </div>
+  <h2>Experience Morocco Like Never Before.</h2>
+  <p>Private, authentic, unforgettable — crafted just for you.</p>
+  <a href="#services" class="btn btn-gold"><i class="fa-solid fa-compass"></i> See Services</a>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="f-name">Tarik Belasri</div>
+        <p class="f-desc">Your private tour guide in Morocco. Authentic, personal, unforgettable experiences crafted just for you.</p>
+        <div class="f-socials">
+          <a href="#" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="#" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="f-col">
+        <h4>Quick Links</h4>
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#testimonials">FAQ</a>
+        <a href="#services">Booking</a>
+      </div>
+      <div class="f-col">
+        <h4>Useful</h4>
+        <a href="#">Resources</a>
+        <a href="#">Courses</a>
+        <a href="#">Workshops</a>
+        <a href="#">Events</a>
+      </div>
+      <div class="f-col">
+        <h4>Follow</h4>
+        <a href="#"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
+        <a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a>
+        <a href="#"><i class="fa-brands fa-tiktok"></i> TikTok</a>
+        <a href="#"><i class="fa-brands fa-youtube"></i> YouTube</a>
+      </div>
+    </div>
+    <div class="f-bottom">
+      <span>© Copyright Tarik Belasri. All rights reserved.</span>
+      <div style="display:flex;gap:16px">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="bnav">
+  <button class="bnav-b active" onclick="scrollTo(0,0)"><i class="fa-solid fa-house"></i><span>Home</span></button>
+  <button class="bnav-b" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})"><i class="fa-solid fa-user"></i><span>About</span></button>
+  <button class="bnav-b" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})"><i class="fa-solid fa-compass"></i><span>Services</span></button>
+  <button class="bnav-b" onclick="document.getElementById('guide').scrollIntoView({behavior:'smooth'})"><i class="fa-solid fa-download"></i><span>Guide</span></button>
+</nav>
+
+<script src="js/data.js"></script>
+<script>
+/* Smooth scroll for all # links */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+
+/* Topbar scroll */
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').style.background =
+    window.scrollY > 60 ? 'rgba(16,14,11,.98)' : 'rgba(16,14,11,.92)';
+});
+
+/* Mobile bottom nav active */
+document.querySelectorAll('.bnav-b').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.bnav-b').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

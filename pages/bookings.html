@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>My Bookings — Marrakech Guide</title>
+  <link rel="stylesheet" href="../css/frontend.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body { padding-top: 68px; }
+    .bk-page { max-width: 860px; margin: 0 auto; padding: 48px 32px 80px; }
+    .bk-page h1 { font-family:'Cormorant Garamond',serif; font-size:2.4rem; font-weight:700; margin-bottom:6px; }
+    .bk-card { background:var(--card); border:1px solid var(--border); border-radius:var(--r); box-shadow:var(--shadow); overflow:hidden; margin-bottom:18px; }
+    .bk-head { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding:22px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+    .bk-head h3 { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:700; margin-bottom:8px; }
+    .bk-meta { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:14px; padding:22px; }
+    .bk-meta-item .lbl { font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:700; margin-bottom:4px; }
+    .bk-meta-item .val { font-size:.93rem; font-weight:600; display:flex; align-items:center; gap:6px; }
+    .bk-meta-item .val i { color:var(--gold); font-size:.85rem; }
+    .bk-actions { padding:14px 22px; background:var(--surface); border-top:1px solid var(--border); display:flex; gap:10px; flex-wrap:wrap; }
+    .status-pill { display:inline-flex; align-items:center; gap:7px; padding:5px 12px; border-radius:999px; font-size:.78rem; font-weight:700; }
+    .status-pill.pending  { background:#fffbeb; color:#92400e; }
+    .status-pill.confirmed{ background:#dcfce7; color:#065f46; }
+    .status-pill.cancelled{ background:#fee2e2; color:#991b1b; }
+    .status-pill i { font-size:.65rem; }
+    @media(max-width:767px){ .bk-page{padding:32px 16px 80px} }
+  </style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="../index.html" class="brand">
+      <div class="logo-mark">M</div>
+      <div>
+        <div class="brand-name">Marrakech Guide</div>
+        <div class="brand-sub">Authentic Experiences</div>
+      </div>
+    </a>
+    <nav class="nav">
+      <a href="../index.html#experiences">Experiences</a>
+      <a href="../index.html#contact" class="nav-contact"><i class="fa-brands fa-whatsapp"></i> Contact</a>
+    </nav>
+  </div>
+</header>
+
+<div class="bk-page">
+  <h1>My Bookings</h1>
+  <p style="color:var(--muted);margin-bottom:32px;line-height:1.7">All your booking requests — stored in this browser. Our team will confirm by WhatsApp within 2 hours.</p>
+  <div id="bkList"></div>
+</div>
+
+<nav class="bottom-nav" style="display:grid">
+  <button class="bnav-btn" onclick="window.location.href='../index.html'"><i class="fa-solid fa-house"></i><span>Home</span></button>
+  <button class="bnav-btn active"><i class="fa-solid fa-list-check"></i><span>Bookings</span></button>
+  <button class="bnav-btn" onclick="window.location.href='../index.html#contact'"><i class="fa-brands fa-whatsapp"></i><span>Contact</span></button>
+</nav>
+
+<script src="../js/data.js"></script>
+<script>
+const bookings = loadData(KEYS.bookings, DEFAULT_BOOKINGS);
+const list = document.getElementById('bkList');
+if (!bookings.length) {
+  list.innerHTML = `<div style="text-align:center;padding:60px 20px;color:var(--muted)">
+    <i class="fa-solid fa-calendar-xmark" style="font-size:3rem;color:var(--border);display:block;margin-bottom:16px"></i>
+    <h2 style="font-family:'Cormorant Garamond',serif;color:var(--text);margin-bottom:8px">No bookings yet</h2>
+    <p>Book your first Marrakech experience!</p>
+    <a href="../index.html" class="btn btn-gold" style="display:inline-flex;margin-top:20px"><i class="fa-solid fa-compass"></i> Explore Experiences</a>
+  </div>`;
+} else {
+  list.innerHTML = bookings.map(b => `
+    <div class="bk-card">
+      <div class="bk-head">
+        <div>
+          <h3>${b.serviceTitle}</h3>
+          <span class="status-pill ${b.status}">
+            <i class="fa-solid fa-${b.status==='confirmed'?'circle-check':b.status==='cancelled'?'circle-xmark':'clock'}"></i>
+            ${b.status.charAt(0).toUpperCase()+b.status.slice(1)}
+          </span>
+        </div>
+        <div style="text-align:right">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:700;color:var(--gold)">${money(b.total)}</div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:2px"><i class="fa-solid fa-credit-card"></i> ${b.payment}</div>
+        </div>
+      </div>
+      <div class="bk-meta">
+        <div class="bk-meta-item"><div class="lbl">Client</div><div class="val"><i class="fa-solid fa-user"></i>${b.customerName}</div></div>
+        <div class="bk-meta-item"><div class="lbl">Date</div><div class="val"><i class="fa-solid fa-calendar"></i>${b.date}</div></div>
+        <div class="bk-meta-item"><div class="lbl">People</div><div class="val"><i class="fa-solid fa-users"></i>${b.people} ${b.people===1?'person':'people'}</div></div>
+        <div class="bk-meta-item"><div class="lbl">Phone</div><div class="val"><i class="fa-brands fa-whatsapp"></i>${b.phone}</div></div>
+        ${b.email?`<div class="bk-meta-item"><div class="lbl">Email</div><div class="val"><i class="fa-solid fa-envelope"></i>${b.email}</div></div>`:''}
+      </div>
+      <div class="bk-actions">
+        <a href="../index.html" class="btn btn-ghost btn-sm"><i class="fa-solid fa-arrow-left"></i> Book Another</a>
+        <a href="https://wa.me/212600000000" class="btn btn-gold btn-sm"><i class="fa-brands fa-whatsapp"></i> Contact Us</a>
+      </div>
+    </div>
+  `).join('');
+}
+</script>
+</body>
+</html>

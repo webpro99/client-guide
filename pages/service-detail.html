@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Experience — Marrakech Guide</title>
+  <link rel="stylesheet" href="../css/frontend.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body { padding-top: 68px; }
+
+    /* HERO */
+    .detail-hero { height: 480px; position: relative; overflow: hidden; }
+    .detail-hero img { width: 100%; height: 100%; object-fit: cover; }
+    .detail-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(14,12,9,.9) 0%, rgba(14,12,9,.25) 60%, transparent 100%); }
+    .detail-hero-content { position: absolute; bottom: 32px; left: 0; right: 0; }
+    .back-link { display: inline-flex; align-items: center; gap: 8px; color: rgba(255,255,255,.58); font-size: .85rem; margin-bottom: 14px; transition: color .18s; }
+    .back-link:hover { color: var(--gold2); }
+    .detail-hero-content h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,5vw,3.6rem); font-weight: 700; color: #fff; line-height: 1.1; margin-bottom: 14px; }
+
+    /* BODY GRID */
+    .detail-body { max-width: 1320px; margin: 0 auto; padding: 48px 32px 80px; display: grid; grid-template-columns: 1fr; gap: 32px; }
+    .detail-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); padding: 30px; box-shadow: var(--shadow); margin-bottom: 24px; }
+    .detail-card:last-child { margin-bottom: 0; }
+    .card-title { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .card-title i { color: var(--gold); font-size: 1.1rem; }
+
+    /* INFO GRID */
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 14px; }
+    .info-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 16px; text-align: center; }
+    .info-item .ico { font-size: 1.5rem; color: var(--gold); margin-bottom: 8px; }
+    .info-item .val { font-weight: 700; font-size: .97rem; margin-bottom: 2px; }
+    .info-item .lbl { font-size: .76rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+    .meeting-row { grid-column: 1/-1; display: flex; gap: 14px; align-items: flex-start; background: var(--gold-dim); border: 1px solid var(--gold-border); border-radius: var(--r-sm); padding: 14px; margin-top: 4px; }
+    .meeting-row i { color: var(--gold); font-size: 1.2rem; margin-top: 2px; flex-shrink: 0; }
+    .meeting-row .label { font-size: .76rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 3px; font-weight: 700; }
+    .meeting-row .val { font-size: .93rem; font-weight: 600; }
+
+    /* HIGHLIGHTS */
+    .hl-list { display: grid; gap: 12px; }
+    .hl-item { display: flex; gap: 16px; align-items: flex-start; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 16px; transition: .18s; }
+    .hl-item:hover { border-color: var(--gold-border); background: var(--gold-dim); }
+    .hl-icon { width: 42px; height: 42px; border-radius: 10px; background: var(--gold-dim); border: 1px solid var(--gold-border); display: grid; place-items: center; flex-shrink: 0; }
+    .hl-icon i { color: var(--gold); font-size: 1rem; }
+    .hl-item strong { display: block; font-size: .95rem; margin-bottom: 3px; }
+    .hl-item span { font-size: .86rem; color: var(--muted); line-height: 1.6; }
+
+    /* INCLUDED */
+    .included-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+    .inc-list { list-style: none; display: grid; gap: 10px; }
+    .inc-list li { display: flex; align-items: flex-start; gap: 11px; font-size: .91rem; }
+    .inc-check { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; margin-top: 1px; }
+    .inc-check.yes { background: var(--sage-dim); color: var(--sage); }
+    .inc-check.no  { background: var(--terra-dim); color: var(--terracotta); }
+    .inc-check i { font-size: .7rem; }
+    .inc-label { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 10px; }
+    .inc-label.yes { color: var(--sage); }
+    .inc-label.no  { color: var(--terracotta); }
+    .cancel-note { margin-top: 18px; padding: 12px 16px; background: var(--gold-dim); border: 1px solid var(--gold-border); border-radius: var(--r-sm); font-size: .87rem; display: flex; gap: 10px; align-items: center; }
+    .cancel-note i { color: var(--gold); flex-shrink: 0; }
+
+    /* PRACTICAL */
+    .practical-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+    .prac-item { display: flex; gap: 12px; align-items: flex-start; }
+    .prac-item i { color: var(--gold); font-size: 1rem; margin-top: 3px; flex-shrink: 0; width: 18px; }
+    .prac-item .label { font-size: .76rem; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; font-weight: 700; margin-bottom: 2px; }
+    .prac-item .val { font-size: .91rem; font-weight: 500; }
+
+    /* REVIEWS */
+    .rating-banner { display: flex; align-items: center; gap: 20px; margin-bottom: 24px; padding: 18px; background: var(--surface); border-radius: var(--r-sm); border: 1px solid var(--border); }
+    .rating-num { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 700; color: var(--gold); line-height: 1; }
+    .rating-stars { color: var(--gold); font-size: 1.1rem; margin-bottom: 4px; }
+    .review-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 18px; margin-bottom: 12px; }
+    .review-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 12px; }
+    .review-name { font-weight: 700; font-size: .95rem; }
+    .review-flag { font-size: 1rem; }
+    .review-date { font-size: .78rem; color: var(--muted); }
+    .review-stars { color: var(--gold); font-size: .9rem; }
+    .review-text { font-size: .9rem; color: var(--muted); line-height: 1.75; font-style: italic; }
+
+    /* RELATED */
+    .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
+
+    /* SIDEBAR */
+    .booking-sidebar { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); padding: 28px; position: sticky; top: 88px; box-shadow: var(--shadow-lg); }
+    .sidebar-price { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 700; color: var(--gold); line-height: 1; margin-bottom: 4px; }
+    .sidebar-price span { font-family: 'Jost', sans-serif; font-size: 1rem; color: var(--muted); font-weight: 400; }
+    .sidebar-chips { display: flex; gap: 7px; flex-wrap: wrap; margin: 12px 0 22px; }
+    .sidebar-trust { font-size: .83rem; color: var(--muted); line-height: 2; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); }
+    .sidebar-trust i { color: var(--sage); width: 16px; }
+    .sidebar-cta { background: var(--gold-dim); border: 1px solid var(--gold-border); border-radius: var(--r-sm); padding: 16px; margin-top: 18px; }
+    .sidebar-cta strong { color: #7a5c10; display: block; margin-bottom: 5px; }
+    .sidebar-cta span { font-size: .83rem; color: var(--muted); line-height: 1.8; display: block; }
+
+    @media (min-width: 1024px) { .detail-body { grid-template-columns: 1fr 380px; } }
+    @media (max-width: 767px) {
+      .detail-hero { height: 280px; }
+      .detail-body { padding: 24px 16px 80px; }
+      .detail-card { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="../index.html" class="brand">
+      <div class="logo-mark">M</div>
+      <div>
+        <div class="brand-name">Marrakech Guide</div>
+        <div class="brand-sub">Authentic Experiences</div>
+      </div>
+    </a>
+    <nav class="nav">
+      <a href="../index.html#experiences">Experiences</a>
+      <a href="../index.html#about">About</a>
+      <a href="../index.html#contact" class="nav-contact"><i class="fa-brands fa-whatsapp"></i> WhatsApp Us</a>
+    </nav>
+  </div>
+</header>
+
+<div id="detailRoot">
+  <div style="text-align:center;padding:140px 20px;color:var(--muted)">
+    <i class="fa-solid fa-circle-notch fa-spin" style="font-size:2rem;color:var(--gold);display:block;margin-bottom:16px"></i>
+    Loading experience…
+  </div>
+</div>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="bookingModal">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-img"><img id="bm-img" src="" alt=""/></div>
+    <div class="modal-body">
+      <div class="modal-head">
+        <div>
+          <h2 id="bm-title">Book Experience</h2>
+          <div style="font-size:.84rem;color:var(--muted);margin-top:5px" id="bm-sub"></div>
+        </div>
+        <button class="modal-close" id="closeModal"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="bookingForm">
+        <input type="hidden" id="bm-svcId"/>
+        <div class="form-grid">
+          <div class="field full">
+            <label>Experience</label>
+            <input id="bm-svc" type="text" readonly style="cursor:default;background:var(--surface)"/>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-calendar"></i> Date *</label>
+            <input id="bm-date" type="date" required/>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-users"></i> Number of People</label>
+            <input id="bm-people" type="number" min="1" value="1" required/>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-user"></i> Full Name *</label>
+            <input id="bm-name" type="text" placeholder="Your full name" required/>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-envelope"></i> Email *</label>
+            <input id="bm-email" type="email" placeholder="you@email.com" required/>
+          </div>
+          <div class="field full">
+            <label><i class="fa-brands fa-whatsapp"></i> Phone / WhatsApp *</label>
+            <input id="bm-phone" type="tel" placeholder="+212 6XX XX XX XX" required/>
+          </div>
+          <div class="field full">
+            <div class="price-summary">
+              <div class="sum-row"><span>Price per person</span><span id="bm-unit">$0</span></div>
+              <div class="sum-row"><span>People</span><span id="bm-ppl">1</span></div>
+              <div class="sum-row total"><span><i class="fa-solid fa-receipt"></i> Total</span><span id="bm-total">$0</span></div>
+            </div>
+          </div>
+          <div class="field full">
+            <button type="button" id="demoPayBtn" class="btn btn-primary btn-full">
+              <i class="fa-solid fa-circle-check"></i> Confirm Booking
+            </button>
+            <div style="font-size:.76rem;color:var(--muted);text-align:center;margin-top:8px">
+              <i class="fa-solid fa-lock"></i> We'll confirm by WhatsApp within 2 hours
+            </div>
+          </div>
+          <div class="field full" style="display:flex;gap:10px">
+            <button type="button" id="cancelBtn" class="btn btn-ghost" style="flex:1"><i class="fa-solid fa-arrow-left"></i> Cancel</button>
+            <button type="submit" class="btn btn-gold" style="flex:1"><i class="fa-solid fa-bookmark"></i> Save Booking</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile bottom nav -->
+<nav class="bottom-nav" style="display:grid">
+  <button class="bnav-btn" onclick="window.location.href='../index.html'"><i class="fa-solid fa-house"></i><span>Home</span></button>
+  <button class="bnav-btn active" id="bookNowMobile"><i class="fa-solid fa-calendar-plus"></i><span>Book Now</span></button>
+  <button class="bnav-btn" onclick="window.location.href='bookings.html'"><i class="fa-solid fa-list-check"></i><span>Bookings</span></button>
+</nav>
+
+<script src="../js/data.js"></script>
+<script>
+const DEMO_REVIEWS = [
+  { name:'Emma T.', flag:'🇬🇧', date:'March 2025', stars:5, text:'An incredible experience — our guide brought every stone and alley to life with stories we\'d never have found in any guidebook. Absolutely unforgettable.' },
+  { name:'Marco R.', flag:'🇮🇹', date:'February 2025', stars:5, text:'Professional, punctual, and genuinely passionate. He knew every secret corner of the medina. We saw things most tourists never discover. Will book again!' },
+  { name:'Yuki N.', flag:'🇯🇵', date:'January 2025', stars:4, text:'Wonderful day, beautiful places. Would have loved a bit more time at the spice souk but overall absolutely magical and deeply memorable.' },
+];
+
+const params  = new URLSearchParams(window.location.search);
+const svcId   = params.get('id');
+let services  = loadData(KEYS.services, DEFAULT_SERVICES);
+let currentService = null;
+const service = services.find(s => s.id === svcId);
+
+if (!service) {
+  document.getElementById('detailRoot').innerHTML = `
+    <div style="text-align:center;padding:120px 20px">
+      <i class="fa-solid fa-triangle-exclamation" style="font-size:3rem;color:var(--gold);display:block;margin-bottom:16px"></i>
+      <h2 style="font-family:'Cormorant Garamond',serif;margin-bottom:12px">Experience not found</h2>
+      <a href="../index.html" class="btn btn-gold" style="display:inline-flex;margin-top:8px"><i class="fa-solid fa-arrow-left"></i> Back to All Experiences</a>
+    </div>`;
+} else {
+  document.title = service.title + ' — Marrakech Guide';
+  renderDetail(service);
+}
+
+function renderDetail(s) {
+  const related = services.filter(x => x.id !== s.id && x.category === s.category).slice(0, 3);
+
+  document.getElementById('detailRoot').innerHTML = `
+    <!-- HERO -->
+    <div class="detail-hero">
+      <img src="${s.image}" alt="${s.title}"/>
+      <div class="detail-hero-overlay"></div>
+      <div class="detail-hero-content wrap">
+        <a href="../index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> All Experiences</a>
+        <h1>${s.title}</h1>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <span class="chip" style="background:rgba(200,151,42,.22);border-color:rgba(200,151,42,.4);color:#f4c97e"><i class="fa-solid fa-location-dot"></i> ${s.location}</span>
+          <span class="chip" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.18);color:#fff"><i class="fa-regular fa-clock"></i> ${s.duration}</span>
+          ${s.category?`<span class="chip" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.18);color:#fff"><i class="${s.faIcon||'fa-solid fa-star'}"></i> ${s.category}</span>`:''}
+          ${s.difficulty?`<span class="chip" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.18);color:#fff"><i class="fa-solid fa-gauge"></i> ${s.difficulty}</span>`:''}
+        </div>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="detail-body">
+      <div class="detail-main">
+
+        <!-- Description -->
+        <div class="detail-card">
+          <div class="card-title"><i class="fa-solid fa-book-open-reader"></i> About This Experience</div>
+          <p style="line-height:1.88;color:var(--text);font-size:.97rem;margin-bottom:18px">${s.description}</p>
+          <p style="line-height:1.88;color:var(--muted);font-size:.93rem">${s.longDesc || ''}</p>
+        </div>
+
+        <!-- Details -->
+        <div class="detail-card">
+          <div class="card-title"><i class="fa-solid fa-circle-info"></i> Tour Details</div>
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="ico"><i class="fa-regular fa-clock"></i></div>
+              <div class="val">${s.duration}</div>
+              <div class="lbl">Duration</div>
+            </div>
+            <div class="info-item">
+              <div class="ico"><i class="fa-solid fa-location-dot"></i></div>
+              <div class="val">${s.location}</div>
+              <div class="lbl">Location</div>
+            </div>
+            <div class="info-item">
+              <div class="ico"><i class="fa-solid fa-${s.groupType==='group'?'users':'user'}"></i></div>
+              <div class="val">${s.groupType==='group'?'Group (up to '+s.maxPeople+')':'Private'}</div>
+              <div class="lbl">Tour Type</div>
+            </div>
+            ${s.difficulty?`<div class="info-item">
+              <div class="ico"><i class="fa-solid fa-gauge"></i></div>
+              <div class="val">${s.difficulty}</div>
+              <div class="lbl">Difficulty</div>
+            </div>`:''}
+            ${s.language?`<div class="info-item">
+              <div class="ico"><i class="fa-solid fa-language"></i></div>
+              <div class="val">${s.language}</div>
+              <div class="lbl">Languages</div>
+            </div>`:''}
+            ${s.minAge?`<div class="info-item">
+              <div class="ico"><i class="fa-solid fa-child"></i></div>
+              <div class="val">${s.minAge}</div>
+              <div class="lbl">Min. Age</div>
+            </div>`:''}
+            ${s.meetingPoint?`<div class="meeting-row">
+              <i class="fa-solid fa-map-pin"></i>
+              <div><div class="label">Meeting Point</div><div class="val">${s.meetingPoint}</div></div>
+            </div>`:''}
+          </div>
+        </div>
+
+        <!-- Highlights -->
+        ${s.highlights&&s.highlights.length?`
+        <div class="detail-card">
+          <div class="card-title"><i class="fa-solid fa-sparkles"></i> Tour Highlights</div>
+          <div class="hl-list">
+            ${s.highlights.map(h=>`
+              <div class="hl-item">
+                <div class="hl-icon"><i class="${h.icon}"></i></div>
+                <div><strong>${h.label}</strong><span>${h.desc||''}</span></div>
+              </div>
+            `).join('')}
+          </div>
+        </div>`:''}
+
+        <!-- Included -->
+        ${(s.included&&s.included.length)||(s.notIncluded&&s.notIncluded.length)?`
+        <div class="detail-card">
+          <div class="card-title"><i class="fa-solid fa-list-check"></i> What's Included</div>
+          <div class="included-grid">
+            ${s.included&&s.included.length?`
+            <div>
+              <div class="inc-label yes"><i class="fa-solid fa-circle-check"></i> Included</div>
+              <ul class="inc-list">
+                ${s.included.map(i=>`<li><span class="inc-check yes"><i class="fa-solid fa-check"></i></span>${i}</li>`).join('')}
+              </ul>
+            </div>`:''}
+            ${s.notIncluded&&s.notIncluded.length?`
+            <div>
+              <div class="inc-label no"><i class="fa-solid fa-circle-xmark"></i> Not Included</div>
+              <ul class="inc-list">
+                ${s.notIncluded.map(i=>`<li><span class="inc-check no"><i class="fa-solid fa-xmark"></i></span>${i}</li>`).join('')}
+              </ul>
+            </div>`:''}
+          </div>
+          ${s.cancelPolicy?`<div class="cancel-note"><i class="fa-solid fa-shield-halved"></i><span><strong>Cancellation Policy:</strong> ${s.cancelPolicy}</span></div>`:''}
+        </div>`:''}
+
+        <!-- Practical Info -->
+        ${s.whatToBring||s.minAge?`
+        <div class="detail-card">
+          <div class="card-title"><i class="fa-solid fa-suitcase-rolling"></i> Practical Information</div>
+          <div class="practical-grid">
+            ${s.whatToBring?`<div class="prac-item"><i class="fa-solid fa-backpack"></i><div><div class="label">What to Bring</div><div class="val">${s.whatToBring}</div></div></div>`:''}
+            ${s.minAge?`<div class="prac-item"><i class="fa-solid fa-child-reaching"></i><div><div class="label">Age Requirement</div><div class="val">${s.minAge}</div></div></div>`:''}
+            <div class="prac-item"><i class="fa-solid fa-sun"></i><div><div class="label">Best Season</div><div class="val">Year-round · Spring & Autumn ideal</div></div></div>
+            <div class="prac-item"><i class="fa-solid fa-credit-card"></i><div><div class="label">Payment</div><div class="val">On booking confirmation</div></div></div>
+          </div>
+        </div>`:''}
+
+        <!-- Reviews -->
+        <div class="detail-card">
+          <div class="card-title"><i class="fa-solid fa-star"></i> Traveler Reviews</div>
+          <div class="rating-banner">
+            <div class="rating-num">${s.rating}</div>
+            <div>
+              <div class="rating-stars">${'★'.repeat(Math.floor(s.rating))}${'☆'.repeat(5-Math.floor(s.rating))}</div>
+              <div style="font-size:.88rem;font-weight:600;margin-bottom:2px">Excellent</div>
+              <div style="font-size:.8rem;color:var(--muted)">${s.reviews} verified reviews</div>
+            </div>
+          </div>
+          ${DEMO_REVIEWS.map(r=>`
+            <div class="review-card">
+              <div class="review-head">
+                <div>
+                  <div class="review-name">${r.flag} ${r.name}</div>
+                  <div class="review-date">${r.date}</div>
+                </div>
+                <div class="review-stars">${'★'.repeat(r.stars)}</div>
+              </div>
+              <div class="review-text">"${r.text}"</div>
+            </div>
+          `).join('')}
+        </div>
+
+        <!-- Related -->
+        ${related.length?`
+        <div class="detail-card">
+          <div class="card-title"><i class="fa-solid fa-map"></i> You May Also Like</div>
+          <div class="related-grid">
+            ${related.map(r=>`
+              <a href="service-detail.html?id=${r.id}" class="scard" style="text-decoration:none">
+                <div class="scard-media">
+                  <img src="${r.image}" alt="${r.title}" loading="lazy"/>
+                  <div class="scard-cat"><i class="${r.faIcon||'fa-solid fa-star'}"></i> ${r.category}</div>
+                </div>
+                <div class="scard-body">
+                  <div class="scard-title">${r.title}</div>
+                  <div class="scard-tagline">${r.tagline}</div>
+                  <div class="scard-chips">
+                    <span class="chip gold"><i class="fa-solid fa-location-dot"></i> ${r.location}</span>
+                    <span class="chip green"><i class="fa-regular fa-clock"></i> ${r.duration}</span>
+                  </div>
+                  <div class="scard-footer">
+                    <div class="price-tag">
+                      <div class="amt">${money(r.price)}</div>
+                      <div class="per">per person</div>
+                    </div>
+                    <span class="btn btn-gold btn-sm"><i class="fa-solid fa-arrow-right"></i> View</span>
+                  </div>
+                </div>
+              </a>
+            `).join('')}
+          </div>
+        </div>`:''}
+
+      </div><!-- /detail-main -->
+
+      <!-- SIDEBAR -->
+      <div>
+        <div class="booking-sidebar">
+          <div class="sidebar-price">${money(s.price)} <span>/ person</span></div>
+          <div class="sidebar-chips">
+            <span class="chip green"><i class="fa-regular fa-clock"></i> ${s.duration}</span>
+            <span class="chip gold"><i class="fa-solid fa-${s.groupType==='group'?'users':'user'}"></i> ${s.groupType==='group'?'Group':'Private'}</span>
+            ${s.difficulty?`<span class="chip"><i class="fa-solid fa-gauge"></i> ${s.difficulty}</span>`:''}
+          </div>
+          <button class="btn btn-gold btn-full" id="sidebarBookBtn" style="margin-bottom:10px">
+            <i class="fa-solid fa-calendar-plus"></i> Book This Experience
+          </button>
+          <button class="btn btn-ghost btn-full" onclick="window.location.href='../index.html'">
+            <i class="fa-solid fa-compass"></i> Browse All Experiences
+          </button>
+          <div class="sidebar-trust">
+            <div><i class="fa-solid fa-circle-check"></i> Free cancellation available</div>
+            <div><i class="fa-solid fa-circle-check"></i> Instant booking confirmation</div>
+            <div><i class="fa-solid fa-circle-check"></i> Local certified guide</div>
+            <div><i class="fa-solid fa-circle-check"></i> WhatsApp confirmation within 2h</div>
+          </div>
+          <div class="sidebar-cta">
+            <strong><i class="fa-solid fa-headset"></i> Questions? We're here.</strong>
+            <span>
+              <i class="fa-brands fa-whatsapp"></i> +212 6XX XX XX XX<br/>
+              <i class="fa-solid fa-envelope"></i> hello@marrakechguide.ma<br/>
+              <i class="fa-solid fa-clock"></i> 08:00 – 21:00 daily
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  currentService = s;
+  document.getElementById('sidebarBookBtn').addEventListener('click', () => openBook(s.id));
+  document.getElementById('bookNowMobile').addEventListener('click', () => openBook(s.id));
+}
+
+/* ── MODAL ── */
+function openBook(id) {
+  services = loadData(KEYS.services, DEFAULT_SERVICES);
+  const s = services.find(x => x.id === id);
+  if (!s) return;
+  currentService = s;
+  document.getElementById('bm-title').textContent = s.title;
+  document.getElementById('bm-sub').textContent = `📍 ${s.location}  ·  ⏱ ${s.duration}`;
+  document.getElementById('bm-img').src = s.image;
+  document.getElementById('bm-svc').value = s.title;
+  document.getElementById('bm-svcId').value = s.id;
+  document.getElementById('bm-date').min = todayISO();
+  document.getElementById('bm-date').value = todayISO();
+  document.getElementById('bm-name').value = '';
+  document.getElementById('bm-email').value = '';
+  document.getElementById('bm-phone').value = '';
+  const pp = document.getElementById('bm-people');
+  pp.disabled = false; pp.min = 1; pp.value = 1;
+  if (s.maxPeople) pp.max = s.maxPeople; else pp.removeAttribute('max');
+  updateTotal();
+  document.getElementById('bookingModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeBook() {
+  document.getElementById('bookingModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function updateTotal() {
+  if (!currentService) return;
+  const p = Math.max(1, parseInt(document.getElementById('bm-people').value || 1));
+  document.getElementById('bm-unit').textContent = money(currentService.price);
+  document.getElementById('bm-ppl').textContent = p;
+  document.getElementById('bm-total').textContent = money(currentService.price * p);
+}
+function doBook(method) {
+  if (!currentService) return;
+  const name = document.getElementById('bm-name').value.trim();
+  const email = document.getElementById('bm-email').value.trim();
+  const phone = document.getElementById('bm-phone').value.trim();
+  const date  = document.getElementById('bm-date').value;
+  if (!name || !email || !phone || !date) { toast('Please fill all required fields', 'error'); return; }
+  const p = Math.max(1, parseInt(document.getElementById('bm-people').value || 1));
+  const bk = {
+    id:'bk-'+Date.now(), serviceId:currentService.id, serviceTitle:currentService.title,
+    customerName:name, email, phone, date, people:p,
+    total:currentService.price*p, status:'pending', payment:method,
+    createdAt:new Date().toISOString(), notes:''
+  };
+  const bks = loadData(KEYS.bookings, DEFAULT_BOOKINGS);
+  bks.unshift(bk);
+  saveData(KEYS.bookings, bks);
+  toast('Booking confirmed! We\'ll contact you soon 🎉', 'success');
+  closeBook();
+  setTimeout(() => window.location.href = 'bookings.html', 1800);
+}
+document.getElementById('closeModal').addEventListener('click', closeBook);
+document.getElementById('cancelBtn').addEventListener('click', closeBook);
+document.getElementById('bookingModal').addEventListener('click', e => { if(e.target===document.getElementById('bookingModal')) closeBook(); });
+document.getElementById('bm-people').addEventListener('input', updateTotal);
+document.getElementById('demoPayBtn').addEventListener('click', () => doBook('demo'));
+document.getElementById('bookingForm').addEventListener('submit', e => { e.preventDefault(); doBook('manual'); });
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeBook(); });
+</script>
+</body>
+</html>

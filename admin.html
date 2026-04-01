@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — Marrakech Guide</title>
+  <link rel="stylesheet" href="css/admin.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">M</div>
+    <div class="title">Marrakech Guide</div>
+    <div class="role">Admin Panel</div>
+  </div>
+
+  <div class="sidebar-nav">
+    <div class="sidebar-section">Overview</div>
+    <button class="nav-item active" data-page="dashboard">
+      <i class="fa-solid fa-chart-pie"></i> Dashboard
+    </button>
+
+    <div class="sidebar-section">Manage</div>
+    <button class="nav-item" data-page="services">
+      <i class="fa-solid fa-compass"></i> Services
+      <span class="nav-badge" id="svcBadge">0</span>
+    </button>
+    <button class="nav-item" data-page="addService">
+      <i class="fa-solid fa-circle-plus"></i> Add Service
+    </button>
+    <button class="nav-item" data-page="bookings">
+      <i class="fa-solid fa-calendar-check"></i> Bookings
+      <span class="nav-badge" id="bkBadge" style="background:#f59e0b;color:#0e0c09">0</span>
+    </button>
+
+    <div class="sidebar-section">Settings</div>
+    <button class="nav-item" data-page="settings">
+      <i class="fa-solid fa-sliders"></i> Settings
+    </button>
+  </div>
+
+  <div class="sidebar-footer">
+    <a href="index.html"><i class="fa-solid fa-arrow-left"></i> Back to Website</a>
+    <a href="#" onclick="seedAndRefresh()"><i class="fa-solid fa-rotate"></i> Load Demo Data</a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="admin-topbar">
+    <div class="topbar-title" id="pageTitle"><i class="fa-solid fa-chart-pie"></i> Dashboard</div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <button class="btn btn-ghost btn-sm" onclick="window.location.href='index.html'"><i class="fa-solid fa-globe"></i> Website</button>
+      <div class="admin-avatar">A</div>
+    </div>
+  </div>
+
+  <!-- ═══ DASHBOARD ═══ -->
+  <div class="page active" id="p-dashboard">
+    <div class="kpi-grid">
+      <div class="kpi" style="--kpi-c:var(--gold);--kpi-bg:rgba(200,151,42,.11)">
+        <div class="kpi-icon"><i class="fa-solid fa-compass"></i></div>
+        <div class="kpi-val" id="kpi-services">0</div>
+        <div class="kpi-label">Total Services</div>
+      </div>
+      <div class="kpi" style="--kpi-c:#2563eb;--kpi-bg:rgba(37,99,235,.1)">
+        <div class="kpi-icon"><i class="fa-solid fa-calendar-check"></i></div>
+        <div class="kpi-val" id="kpi-bookings">0</div>
+        <div class="kpi-label">Total Bookings</div>
+      </div>
+      <div class="kpi" style="--kpi-c:#d97706;--kpi-bg:rgba(217,119,6,.1)">
+        <div class="kpi-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+        <div class="kpi-val" id="kpi-pending">0</div>
+        <div class="kpi-label">Awaiting Approval</div>
+      </div>
+      <div class="kpi" style="--kpi-c:#16a34a;--kpi-bg:rgba(22,163,74,.1)">
+        <div class="kpi-icon"><i class="fa-solid fa-dollar-sign"></i></div>
+        <div class="kpi-val" id="kpi-revenue">$0</div>
+        <div class="kpi-label">Total Revenue</div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-head">
+        <div><h3><i class="fa-solid fa-clock-rotate-left"></i> Recent Bookings</h3><p>Latest 5 booking requests</p></div>
+        <button class="btn btn-ghost btn-sm" onclick="goPage('bookings')">View All <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Client</th><th>Experience</th><th>Date</th><th>People</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="dashBkBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-head">
+        <div><h3><i class="fa-solid fa-compass"></i> All Services</h3><p>Quick overview</p></div>
+        <button class="btn btn-primary btn-sm" onclick="goPage('addService')"><i class="fa-solid fa-plus"></i> Add Service</button>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Service</th><th>Category</th><th>Price</th><th>Type</th><th>Actions</th></tr></thead>
+          <tbody id="dashSvcBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SERVICES ═══ -->
+  <div class="page" id="p-services">
+    <div class="admin-filter">
+      <input class="admin-search" id="svcSearch" type="search" placeholder="Search services…"/>
+      <select class="admin-select" id="svcCatFilter">
+        <option value="">All categories</option>
+        <option>Cultural</option><option>Adventure</option><option>Food & Culture</option>
+        <option>Wellness</option><option>Nature</option><option>Private</option>
+      </select>
+      <button class="btn btn-primary btn-sm" onclick="goPage('addService')"><i class="fa-solid fa-plus"></i> Add Service</button>
+    </div>
+    <div class="table-card">
+      <div class="table-head"><div><h3><i class="fa-solid fa-compass"></i> Services Management</h3><p>Edit or delete existing experiences</p></div></div>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Service</th><th>Category</th><th>Price</th><th>Duration</th><th>Type</th><th>Max</th><th>Actions</th></tr></thead>
+          <tbody id="svcTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ADD/EDIT SERVICE ═══ -->
+  <div class="page" id="p-addService">
+    <div class="form-panel">
+      <div class="form-panel-head">
+        <h3><i class="fa-solid fa-circle-plus"></i> <span id="formTitle">Add New Service</span></h3>
+        <p>Fill in the details — the experience will appear on the website immediately</p>
+      </div>
+      <form id="serviceForm">
+        <input type="hidden" id="svcId"/>
+        <div class="form-grid">
+          <div class="field">
+            <label><i class="fa-solid fa-heading"></i> Title *</label>
+            <input id="svcTitle" type="text" placeholder="e.g. Medina Walking Tour" required/>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-quote-left"></i> Tagline</label>
+            <input id="svcTagline" type="text" placeholder="A short inspiring subtitle"/>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-dollar-sign"></i> Price (USD) *</label>
+            <input id="svcPrice" type="number" min="0" step="1" placeholder="45" required/>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-tags"></i> Category *</label>
+            <select id="svcCat" required>
+              <option value="">Select…</option>
+              <option>Cultural</option><option>Adventure</option><option>Food & Culture</option>
+              <option>Wellness</option><option>Nature</option><option>Private</option>
+            </select>
+          </div>
+          <div class="field">
+            <label><i class="fa-regular fa-clock"></i> Duration *</label>
+            <input id="svcDuration" type="text" placeholder="e.g. 3 hours" required/>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-location-dot"></i> Location *</label>
+            <input id="svcLocation" type="text" placeholder="e.g. Old Medina" required/>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-gauge"></i> Difficulty</label>
+            <select id="svcDifficulty">
+              <option value="">Select…</option>
+              <option>Easy</option><option>Moderate</option><option>Challenging</option><option>Any level</option>
+            </select>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-language"></i> Languages</label>
+            <input id="svcLang" type="text" placeholder="EN / FR / AR"/>
+          </div>
+          <div class="field full">
+            <label><i class="fa-solid fa-image"></i> Image URL *</label>
+            <input id="svcImage" type="url" placeholder="https://images.unsplash.com/…" required/>
+            <small>Use any Unsplash URL or direct image link</small>
+          </div>
+          <div class="field full">
+            <label><i class="fa-solid fa-align-left"></i> Short Description *</label>
+            <textarea id="svcDesc" placeholder="2–3 paragraph overview of the experience…" required></textarea>
+          </div>
+          <div class="field full">
+            <label><i class="fa-solid fa-book-open"></i> Full Description</label>
+            <textarea id="svcLongDesc" placeholder="Detailed step-by-step story of the experience…" style="min-height:120px"></textarea>
+          </div>
+          <div class="field full">
+            <label><i class="fa-solid fa-users"></i> Booking Mode *</label>
+            <div class="mode-cards">
+              <label class="mode-card">
+                <input type="radio" name="svcMode" value="private" checked/>
+                <div><strong><i class="fa-solid fa-user"></i> Private</strong><small>Flat price — one client or couple</small></div>
+              </label>
+              <label class="mode-card">
+                <input type="radio" name="svcMode" value="group"/>
+                <div><strong><i class="fa-solid fa-users"></i> Group</strong><small>Price × number of people</small></div>
+              </label>
+            </div>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-user-group"></i> Max People</label>
+            <input id="svcMax" type="number" min="1" placeholder="e.g. 12"/>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-tag"></i> Badge Label</label>
+            <input id="svcBadgeLabel" type="text" placeholder="e.g. Bestseller"/>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-star"></i> Rating (1–5)</label>
+            <input id="svcRating" type="number" min="1" max="5" step="0.1" placeholder="4.9"/>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-comments"></i> Review Count</label>
+            <input id="svcReviews" type="number" min="0" placeholder="128"/>
+          </div>
+          <div class="field full">
+            <label><i class="fa-solid fa-circle-check"></i> What's Included <small style="text-transform:none;letter-spacing:0;font-weight:400">(one item per line)</small></label>
+            <textarea id="svcIncluded" placeholder="Expert local guide&#10;Mint tea tasting&#10;Entry fees" style="min-height:80px"></textarea>
+          </div>
+          <div class="field full">
+            <label><i class="fa-solid fa-circle-xmark"></i> Not Included <small style="text-transform:none;letter-spacing:0;font-weight:400">(one item per line)</small></label>
+            <textarea id="svcNotIncluded" placeholder="Hotel transport&#10;Gratuities&#10;Personal expenses" style="min-height:70px"></textarea>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-map-pin"></i> Meeting Point</label>
+            <input id="svcMeeting" type="text" placeholder="e.g. Koutoubia Mosque entrance"/>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-shield-halved"></i> Cancellation Policy</label>
+            <input id="svcCancel" type="text" placeholder="e.g. Free cancellation up to 24h before"/>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-backpack"></i> What to Bring</label>
+            <input id="svcBring" type="text" placeholder="e.g. Comfortable shoes, sunscreen"/>
+          </div>
+          <div class="field">
+            <label><i class="fa-solid fa-child"></i> Minimum Age</label>
+            <input id="svcAge" type="text" placeholder="e.g. Suitable for all ages"/>
+          </div>
+          <div class="field full" style="display:flex;gap:10px;flex-wrap:wrap;padding-top:4px">
+            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Service</button>
+            <button type="button" class="btn btn-ghost" onclick="clearForm()"><i class="fa-solid fa-rotate-left"></i> Clear</button>
+            <button type="button" class="btn btn-ghost" onclick="goPage('services')"><i class="fa-solid fa-arrow-left"></i> Back to List</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══ BOOKINGS ═══ -->
+  <div class="page" id="p-bookings">
+    <div class="admin-filter">
+      <input class="admin-search" id="bkSearch" type="search" placeholder="Search bookings…"/>
+      <select class="admin-select" id="bkStatusFilter">
+        <option value="">All statuses</option>
+        <option>pending</option><option>confirmed</option><option>cancelled</option>
+      </select>
+    </div>
+    <div class="table-card">
+      <div class="table-head">
+        <div><h3><i class="fa-solid fa-calendar-check"></i> All Bookings</h3><p>Manage and update booking statuses</p></div>
+        <span id="bkCount" style="font-size:.8rem;color:var(--muted);align-self:center"></span>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Client</th><th>Experience</th><th>Date</th><th>People</th><th>Total</th><th>Payment</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="bkTableBody"></tbody>
+        </table>
+      </div>
+      <div class="quick-stats" id="bkSummary"></div>
+    </div>
+  </div>
+
+  <!-- ═══ SETTINGS ═══ -->
+  <div class="page" id="p-settings">
+    <div class="form-panel" style="max-width:640px">
+      <div class="form-panel-head">
+        <h3><i class="fa-solid fa-sliders"></i> Business Settings</h3>
+        <p>Update your guide business information</p>
+      </div>
+      <div class="form-grid">
+        <div class="field"><label><i class="fa-solid fa-building"></i> Business Name</label><input type="text" value="Marrakech Guide"/></div>
+        <div class="field"><label><i class="fa-brands fa-whatsapp"></i> WhatsApp</label><input type="tel" placeholder="+212 6XX XX XX XX"/></div>
+        <div class="field full"><label><i class="fa-solid fa-envelope"></i> Email</label><input type="email" placeholder="hello@marrakechguide.ma"/></div>
+        <div class="field full"><label><i class="fa-solid fa-location-dot"></i> Address</label><input type="text" placeholder="Marrakech, Morocco"/></div>
+        <div class="field full"><label><i class="fa-solid fa-dollar-sign"></i> Currency</label><select><option>USD</option><option>EUR</option><option>GBP</option><option>MAD</option></select></div>
+        <div class="field full" style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="toast('Settings saved!','success')"><i class="fa-solid fa-floppy-disk"></i> Save Settings</button>
+          <button class="btn btn-ghost" onclick="seedAndRefresh()"><i class="fa-solid fa-rotate"></i> Reset Demo Data</button>
+        </div>
+      </div>
+    </div>
+    <div class="form-panel" style="max-width:640px;margin-top:0">
+      <div class="form-panel-head"><h3><i class="fa-solid fa-database"></i> Data Management</h3><p>Export or reset your booking data</p></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-ghost btn-sm" onclick="exportData()"><i class="fa-solid fa-file-export"></i> Export JSON</button>
+        <button class="btn btn-danger btn-sm" onclick="clearAll()"><i class="fa-solid fa-trash"></i> Clear All Data</button>
+        <button class="btn btn-ghost btn-sm" onclick="seedAndRefresh()"><i class="fa-solid fa-rotate"></i> Load Demo Data</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script>
+let services = loadData(KEYS.services, DEFAULT_SERVICES);
+let bookings  = loadData(KEYS.bookings, DEFAULT_BOOKINGS);
+
+const pageTitles = {
+  dashboard: '<i class="fa-solid fa-chart-pie"></i> Dashboard',
+  services:  '<i class="fa-solid fa-compass"></i> Services',
+  addService:'<i class="fa-solid fa-circle-plus"></i> Add Service',
+  bookings:  '<i class="fa-solid fa-calendar-check"></i> Bookings',
+  settings:  '<i class="fa-solid fa-sliders"></i> Settings'
+};
+
+function goPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const page = document.getElementById('p-' + id);
+  if (page) page.classList.add('active');
+  const btn = document.querySelector(`.nav-item[data-page="${id}"]`);
+  if (btn) btn.classList.add('active');
+  document.getElementById('pageTitle').innerHTML = pageTitles[id] || id;
+  refresh();
+}
+document.querySelectorAll('.nav-item').forEach(btn => {
+  btn.addEventListener('click', () => goPage(btn.dataset.page));
+});
+
+function refresh() {
+  services = loadData(KEYS.services, DEFAULT_SERVICES);
+  bookings  = loadData(KEYS.bookings, DEFAULT_BOOKINGS);
+  updateKPIs(); updateBadges();
+  renderDashBk(); renderDashSvc();
+  renderSvcTable(); renderBkTable();
+}
+
+function updateKPIs() {
+  const rev  = bookings.filter(b=>b.status!=='cancelled').reduce((a,b)=>a+b.total,0);
+  const pend = bookings.filter(b=>b.status==='pending').length;
+  document.getElementById('kpi-services').textContent  = services.length;
+  document.getElementById('kpi-bookings').textContent  = bookings.length;
+  document.getElementById('kpi-pending').textContent   = pend;
+  document.getElementById('kpi-revenue').textContent   = money(rev);
+}
+function updateBadges() {
+  const pend = bookings.filter(b=>b.status==='pending').length;
+  document.getElementById('svcBadge').textContent = services.length;
+  document.getElementById('bkBadge').textContent  = pend;
+}
+
+function badgeHtml(s) {
+  const icons = { pending:'fa-clock', confirmed:'fa-circle-check', cancelled:'fa-circle-xmark' };
+  return `<span class="badge badge-${s}"><i class="fa-solid ${icons[s]||'fa-circle'}"></i> ${s}</span>`;
+}
+
+function renderDashBk() {
+  const tbody = document.getElementById('dashBkBody'); if (!tbody) return;
+  const recent = [...bookings].slice(0,5);
+  if (!recent.length) { tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:24px">No bookings yet</td></tr>'; return; }
+  tbody.innerHTML = recent.map(b=>`
+    <tr>
+      <td><div class="td-name">${b.customerName}</div><div class="td-sub"><i class="fa-brands fa-whatsapp"></i> ${b.phone}</div></td>
+      <td>${b.serviceTitle}</td>
+      <td><i class="fa-regular fa-calendar" style="color:var(--gold)"></i> ${b.date}</td>
+      <td><i class="fa-solid fa-users" style="color:var(--muted)"></i> ${b.people}</td>
+      <td><strong>${money(b.total)}</strong></td>
+      <td>${badgeHtml(b.status)}</td>
+      <td class="actions">
+        ${b.status!=='confirmed'?`<button class="btn btn-success btn-sm" onclick="setStatus('${b.id}','confirmed')"><i class="fa-solid fa-check"></i></button>`:''}
+        ${b.status!=='cancelled'?`<button class="btn btn-danger btn-sm" onclick="setStatus('${b.id}','cancelled')"><i class="fa-solid fa-xmark"></i></button>`:''}
+        <button class="btn btn-ghost btn-sm" onclick="delBooking('${b.id}')"><i class="fa-solid fa-trash"></i></button>
+      </td>
+    </tr>`).join('');
+}
+function renderDashSvc() {
+  const tbody = document.getElementById('dashSvcBody'); if (!tbody) return;
+  tbody.innerHTML = services.map(s=>`
+    <tr>
+      <td><div class="td-img-wrap"><img class="td-img" src="${s.image}" alt="${s.title}"/><div><div class="td-name">${s.title}</div><div class="td-sub">${s.location}</div></div></div></td>
+      <td><span class="badge badge-gold"><i class="${s.faIcon||'fa-solid fa-star'}"></i> ${s.category}</span></td>
+      <td><strong>${money(s.price)}</strong></td>
+      <td><i class="fa-solid fa-${s.groupType==='group'?'users':'user'}" style="color:var(--muted)"></i> ${s.groupType==='group'?'Group':'Private'}</td>
+      <td class="actions">
+        <button class="btn btn-ghost btn-sm" onclick="editService('${s.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="delService('${s.id}')"><i class="fa-solid fa-trash"></i></button>
+      </td>
+    </tr>`).join('');
+}
+function renderSvcTable() {
+  const q = (document.getElementById('svcSearch')?.value||'').toLowerCase();
+  const cat = document.getElementById('svcCatFilter')?.value||'';
+  const tbody = document.getElementById('svcTableBody'); if (!tbody) return;
+  const f = services.filter(s=>(!q||s.title.toLowerCase().includes(q))&&(!cat||s.category===cat));
+  if (!f.length) { tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:28px">No services found</td></tr>'; return; }
+  tbody.innerHTML = f.map(s=>`
+    <tr>
+      <td><div class="td-img-wrap"><img class="td-img" src="${s.image}" alt="${s.title}"/><div><div class="td-name">${s.title}</div><div class="td-sub">${s.tagline||''}</div></div></div></td>
+      <td><span class="badge badge-gold"><i class="${s.faIcon||'fa-solid fa-star'}"></i> ${s.category}</span></td>
+      <td><strong>${money(s.price)}</strong></td>
+      <td>${s.duration}</td>
+      <td><i class="fa-solid fa-${s.groupType==='group'?'users':'user'}"></i> ${s.groupType==='group'?'Group':'Private'}</td>
+      <td>${s.maxPeople||'—'}</td>
+      <td class="actions">
+        <button class="btn btn-ghost btn-sm" onclick="editService('${s.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="delService('${s.id}')"><i class="fa-solid fa-trash"></i></button>
+      </td>
+    </tr>`).join('');
+}
+function renderBkTable() {
+  const q  = (document.getElementById('bkSearch')?.value||'').toLowerCase();
+  const st = document.getElementById('bkStatusFilter')?.value||'';
+  const tbody = document.getElementById('bkTableBody'); if (!tbody) return;
+  const f = bookings.filter(b=>(!q||b.customerName.toLowerCase().includes(q)||b.serviceTitle.toLowerCase().includes(q))&&(!st||b.status===st));
+  if (!f.length) { tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:28px">No bookings found</td></tr>'; }
+  else tbody.innerHTML = f.map(b=>`
+    <tr>
+      <td><div class="td-name">${b.customerName}</div><div class="td-sub"><i class="fa-brands fa-whatsapp"></i> ${b.phone}${b.email?' · '+b.email:''}</div></td>
+      <td>${b.serviceTitle}</td>
+      <td><i class="fa-regular fa-calendar" style="color:var(--gold)"></i> ${b.date}</td>
+      <td>${b.people}</td>
+      <td><strong>${money(b.total)}</strong></td>
+      <td><span class="badge badge-gold"><i class="fa-solid fa-credit-card"></i> ${b.payment}</span></td>
+      <td>${badgeHtml(b.status)}</td>
+      <td class="actions">
+        ${b.status!=='confirmed'?`<button class="btn btn-success btn-sm" onclick="setStatus('${b.id}','confirmed')"><i class="fa-solid fa-check"></i></button>`:''}
+        ${b.status!=='cancelled'?`<button class="btn btn-danger btn-sm" onclick="setStatus('${b.id}','cancelled')"><i class="fa-solid fa-xmark"></i></button>`:''}
+        <button class="btn btn-ghost btn-sm" onclick="delBooking('${b.id}')"><i class="fa-solid fa-trash"></i></button>
+      </td>
+    </tr>`).join('');
+  const rev = f.filter(b=>b.status!=='cancelled').reduce((a,b)=>a+b.total,0);
+  const pend = f.filter(b=>b.status==='pending').length;
+  const conf = f.filter(b=>b.status==='confirmed').length;
+  const sum = document.getElementById('bkSummary');
+  if (sum) sum.innerHTML=`<span class="qs-item">Showing <strong>${f.length}</strong></span><span class="qs-item">Pending <strong>${pend}</strong></span><span class="qs-item">Confirmed <strong>${conf}</strong></span><span class="qs-item">Revenue <strong>${money(rev)}</strong></span>`;
+  const cnt = document.getElementById('bkCount');
+  if (cnt) cnt.textContent = f.length + ' result(s)';
+}
+
+function setStatus(id, status) {
+  bookings = bookings.map(b=>b.id===id?{...b,status}:b);
+  saveData(KEYS.bookings, bookings);
+  toast(`Booking ${status}`, status==='confirmed'?'success':'');
+  refresh();
+}
+function delBooking(id) {
+  if (!confirm('Delete this booking?')) return;
+  bookings = bookings.filter(b=>b.id!==id);
+  saveData(KEYS.bookings, bookings);
+  toast('Booking deleted');
+  refresh();
+}
+
+function clearForm() {
+  document.getElementById('serviceForm').reset();
+  document.getElementById('svcId').value='';
+  document.getElementById('formTitle').textContent='Add New Service';
+  document.querySelector('input[name="svcMode"][value="private"]').checked=true;
+}
+function editService(id) {
+  const s = services.find(x=>x.id===id); if (!s) return;
+  document.getElementById('svcId').value         = s.id;
+  document.getElementById('svcTitle').value      = s.title;
+  document.getElementById('svcTagline').value    = s.tagline||'';
+  document.getElementById('svcPrice').value      = s.price;
+  document.getElementById('svcCat').value        = s.category||'';
+  document.getElementById('svcDuration').value   = s.duration;
+  document.getElementById('svcLocation').value   = s.location;
+  document.getElementById('svcDifficulty').value = s.difficulty||'';
+  document.getElementById('svcLang').value       = s.language||'';
+  document.getElementById('svcImage').value      = s.image;
+  document.getElementById('svcDesc').value       = s.description;
+  document.getElementById('svcLongDesc').value   = s.longDesc||'';
+  document.getElementById('svcMax').value        = s.maxPeople||'';
+  document.getElementById('svcBadgeLabel').value = s.badge||'';
+  document.getElementById('svcRating').value     = s.rating||'';
+  document.getElementById('svcReviews').value    = s.reviews||'';
+  document.getElementById('svcIncluded').value   = (s.included||[]).join('\n');
+  document.getElementById('svcNotIncluded').value= (s.notIncluded||[]).join('\n');
+  document.getElementById('svcMeeting').value    = s.meetingPoint||'';
+  document.getElementById('svcCancel').value     = s.cancelPolicy||'';
+  document.getElementById('svcBring').value      = s.whatToBring||'';
+  document.getElementById('svcAge').value        = s.minAge||'';
+  const mode = s.groupType||'private';
+  const radio = document.querySelector(`input[name="svcMode"][value="${mode}"]`);
+  if (radio) radio.checked=true;
+  document.getElementById('formTitle').textContent='Edit Service';
+  goPage('addService');
+}
+function delService(id) {
+  const n = bookings.filter(b=>b.serviceId===id).length;
+  if (!confirm(`Delete this service? It has ${n} booking(s).`)) return;
+  services = services.filter(s=>s.id!==id);
+  saveData(KEYS.services, services);
+  toast('Service deleted');
+  refresh();
+}
+
+document.getElementById('serviceForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const mode = document.querySelector('input[name="svcMode"]:checked')?.value||'private';
+  const id   = document.getElementById('svcId').value||('svc-'+Date.now());
+  const inc  = document.getElementById('svcIncluded').value.split('\n').map(l=>l.trim()).filter(Boolean);
+  const ninc = document.getElementById('svcNotIncluded').value.split('\n').map(l=>l.trim()).filter(Boolean);
+  const svc = {
+    id,
+    title:      document.getElementById('svcTitle').value.trim(),
+    tagline:    document.getElementById('svcTagline').value.trim(),
+    price:      Number(document.getElementById('svcPrice').value),
+    category:   document.getElementById('svcCat').value,
+    duration:   document.getElementById('svcDuration').value.trim(),
+    location:   document.getElementById('svcLocation').value.trim(),
+    difficulty: document.getElementById('svcDifficulty').value,
+    language:   document.getElementById('svcLang').value.trim(),
+    image:      document.getElementById('svcImage').value.trim(),
+    description:document.getElementById('svcDesc').value.trim(),
+    longDesc:   document.getElementById('svcLongDesc').value.trim(),
+    groupType:  mode,
+    maxPeople:  Number(document.getElementById('svcMax').value||0),
+    badge:      document.getElementById('svcBadgeLabel').value.trim()||null,
+    rating:     parseFloat(document.getElementById('svcRating').value||4.8),
+    reviews:    parseInt(document.getElementById('svcReviews').value||0),
+    included:   inc, notIncluded: ninc,
+    meetingPoint: document.getElementById('svcMeeting').value.trim(),
+    cancelPolicy: document.getElementById('svcCancel').value.trim(),
+    whatToBring:  document.getElementById('svcBring').value.trim(),
+    minAge:       document.getElementById('svcAge').value.trim(),
+    faIcon: 'fa-solid fa-star', highlights: []
+  };
+  const idx = services.findIndex(s=>s.id===id);
+  if (idx>=0) services[idx]=svc; else services.unshift(svc);
+  saveData(KEYS.services, services);
+  toast('Service saved!','success');
+  clearForm(); goPage('services');
+});
+
+document.getElementById('svcSearch')?.addEventListener('input', renderSvcTable);
+document.getElementById('svcCatFilter')?.addEventListener('change', renderSvcTable);
+document.getElementById('bkSearch')?.addEventListener('input', renderBkTable);
+document.getElementById('bkStatusFilter')?.addEventListener('change', renderBkTable);
+
+function exportData() {
+  const blob = new Blob([JSON.stringify({services,bookings},null,2)],{type:'application/json'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='marrakech-guide-data.json'; a.click();
+  toast('Data exported!','success');
+}
+function clearAll() {
+  if (!confirm('Clear ALL data? This cannot be undone.')) return;
+  localStorage.removeItem(KEYS.services); localStorage.removeItem(KEYS.bookings);
+  services=[]; bookings=[]; refresh(); toast('All data cleared');
+}
+function seedAndRefresh() {
+  seedDemoData();
+  services=loadData(KEYS.services,DEFAULT_SERVICES);
+  bookings=loadData(KEYS.bookings,DEFAULT_BOOKINGS);
+  refresh(); toast('Demo data loaded!','success');
+}
+
+refresh();
+</script>
+</body>
+</html>
