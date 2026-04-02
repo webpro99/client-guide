@@ -321,6 +321,19 @@ VALUES
  NULL,'Comfortable shoes, sunhat, sunscreen, camera','All ages',10);
 
 -- ============================================================
+-- TABLE: blocked_dates  (admin calendar off-days)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS `blocked_dates` (
+  `id`           INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `blocked_date` DATE         NOT NULL,
+  `reason`       VARCHAR(255) DEFAULT NULL,
+  `created_at`   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_blocked_date` (`blocked_date`),
+  KEY `idx_blocked_date` (`blocked_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================================
 -- SAMPLE BOOKINGS (demo data)
 -- ============================================================
 INSERT INTO `bookings`

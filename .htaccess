@@ -1,0 +1,10 @@
+Options -Indexes
+RewriteEngine On
+RewriteBase /client-guide/
+
+# Allow direct access to real files and directories
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Route everything else through index.php
+RewriteRule ^ index.php [L]

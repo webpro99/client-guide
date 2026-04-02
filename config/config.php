@@ -80,6 +80,7 @@ spl_autoload_register(function (string $class): void {
         'BookingModel'      => MODELS_PATH . '/Booking.php',
         'PaymentModel'      => MODELS_PATH . '/Payment.php',
         'SettingModel'      => MODELS_PATH . '/Setting.php',
+        'BlockedDateModel'  => MODELS_PATH . '/BlockedDate.php',
     ];
 
     if (isset($map[$class])) {
