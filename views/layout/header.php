@@ -17,6 +17,8 @@
 
   <!-- CSRF meta tag for AJAX requests -->
   <meta name="csrf-token" content="<?= e(CSRF::token()) ?>">
+  <!-- App base URL for JavaScript -->
+  <meta name="app-url" content="<?= rtrim(APP_URL, '/') ?>">
 </head>
 <body>
 

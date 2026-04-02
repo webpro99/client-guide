@@ -3,6 +3,7 @@ require_once ROOT_PATH . '/models/Service.php';
 require_once ROOT_PATH . '/models/Booking.php';
 require_once ROOT_PATH . '/models/User.php';
 require_once ROOT_PATH . '/models/Setting.php';
+require_once ROOT_PATH . '/models/BlockedDate.php';
 
 /**
  * AdminController — all admin dashboard pages.
@@ -275,6 +276,100 @@ class AdminController
         SettingModel::setMany($data);
         flash('success', 'Settings saved successfully.');
         redirect('/admin/settings');
+    }
+
+    // ------------------------------------------------------------------
+    // Calendar (off-days management)
+    // ------------------------------------------------------------------
+
+    public function calendar(array $params = []): void
+    {
+        Auth::requireAdmin();
+
+        // Default: show current month + 2 ahead
+        $year  = (int)(get('year')  ?: date('Y'));
+        $month = (int)(get('month') ?: date('n'));
+
+        // Clamp month
+        if ($month < 1)  { $month = 12; $year--; }
+        if ($month > 12) { $month = 1;  $year++; }
+
+        $from = sprintf('%04d-%02d-01', $year, $month);
+        $to   = date('Y-m-t', strtotime($from)); // last day of month
+
+        $blockedDates = BlockedDateModel::inRange($from, $to);
+        $blockedList  = array_column($blockedDates, 'blocked_date');
+
+        // Build blocked map keyed by date for quick lookup
+        $blockedMap = [];
+        foreach ($blockedDates as $row) {
+            $blockedMap[$row['blocked_date']] = $row['reason'] ?? '';
+        }
+
+        view('admin/calendar', [
+            'pageTitle'    => 'Calendar — Admin',
+            'year'         => $year,
+            'month'        => $month,
+            'from'         => $from,
+            'to'           => $to,
+            'blockedDates' => $blockedDates,
+            'blockedList'  => $blockedList,
+            'blockedMap'   => $blockedMap,
+            'settings'     => SettingModel::all(),
+        ]);
+    }
+
+    public function blockDate(array $params = []): void
+    {
+        Auth::requireAdmin();
+        CSRF::verify();
+
+        $date   = post('date');
+        $reason = post('reason');
+
+        if (!$date) {
+            flash('error', 'Please provide a date.');
+            redirect('/admin/calendar');
+        }
+
+        $d = DateTime::createFromFormat('Y-m-d', $date);
+        if (!$d || $d->format('Y-m-d') !== $date) {
+            flash('error', 'Invalid date format.');
+            redirect('/admin/calendar');
+        }
+
+        BlockedDateModel::block($date, $reason);
+
+        if (isAjax()) {
+            jsonSuccess(['date' => $date], 'Date blocked.');
+        }
+
+        flash('success', 'Date ' . $date . ' has been blocked.');
+        redirect('/admin/calendar?year=' . $d->format('Y') . '&month=' . (int)$d->format('n'));
+    }
+
+    public function unblockDate(array $params = []): void
+    {
+        Auth::requireAdmin();
+        CSRF::verify();
+
+        $date = post('date');
+
+        if (!$date) {
+            if (isAjax()) jsonError('date is required.', 422);
+            flash('error', 'Date is required.');
+            redirect('/admin/calendar');
+        }
+
+        BlockedDateModel::unblock($date);
+
+        if (isAjax()) {
+            jsonSuccess(['date' => $date], 'Date unblocked.');
+        }
+
+        $d = DateTime::createFromFormat('Y-m-d', $date);
+        flash('success', 'Date ' . $date . ' is now available for bookings.');
+        redirect('/admin/calendar' . ($d ? '?year=' . $d->format('Y') . '&month=' . (int)$d->format('n') : ''));
     }
 
     // ------------------------------------------------------------------

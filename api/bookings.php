@@ -12,6 +12,7 @@
 require_once dirname(__DIR__) . '/config/config.php';
 require_once ROOT_PATH . '/models/Booking.php';
 require_once ROOT_PATH . '/models/Service.php';
+require_once ROOT_PATH . '/models/BlockedDate.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -45,6 +46,16 @@ switch (true) {
         $date = DateTime::createFromFormat('Y-m-d', $data['booking_date']);
         if (!$date || $date < new DateTime('today')) {
             jsonError('Booking date must be today or in the future.', 422);
+        }
+
+        // Check if date is blocked by admin
+        if (BlockedDateModel::isBlocked($data['booking_date'])) {
+            $blocked = BlockedDateModel::find($data['booking_date']);
+            $msg = 'This date is not available for bookings.';
+            if (!empty($blocked['reason'])) {
+                $msg .= ' Reason: ' . $blocked['reason'];
+            }
+            jsonError($msg, 422);
         }
 
         $service = ServiceModel::find((int)$data['service_id']);
